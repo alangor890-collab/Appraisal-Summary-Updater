@@ -1,0 +1,5 @@
+{
+  "name": "Appraisal Summary Updater",
+  "description": "Automatically extract scores from PDF appraisals and update staff Excel lists using Gemini AI.",
+  "requestFramePermissions": []
+}
