@@ -56,7 +56,13 @@ class ErrorBoundary extends React.Component<{ children: React.ReactNode }, { has
 }
 
 // Initialize Gemini
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || '' });
+const getApiKey = () => {
+  // In AI Studio, it's injected as process.env.GEMINI_API_KEY
+  // In Vercel (Vite), it's usually VITE_GEMINI_API_KEY via import.meta.env
+  return import.meta.env.VITE_GEMINI_API_KEY || process.env.GEMINI_API_KEY || '';
+};
+
+const ai = new GoogleGenAI({ apiKey: getApiKey() });
 
 interface ExtractionResult {
   employeeNo: string;
@@ -154,6 +160,12 @@ function App() {
 
   const processFiles = async () => {
     if (pdfFiles.length === 0 || !excelData || !excelFile) return;
+
+    const apiKey = getApiKey();
+    if (!apiKey) {
+      setError("Gemini API Key is missing. Please set VITE_GEMINI_API_KEY in your Vercel environment variables.");
+      return;
+    }
 
     setIsProcessing(true);
     setError(null);
